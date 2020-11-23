@@ -14,6 +14,17 @@ const assets = [
   '/pages/fallback.html',
 ];
 
+// cache size limit function
+const limitCacheSize = (name, size) => {
+  caches.open(name).then((cache) => {
+    cache.keys().then((keys) => {
+      if (keys.length > size) {
+        cache.delete(keys[0]).then(limitCacheSize(name, size));
+      }
+    });
+  });
+};
+
 // install service worker
 self.addEventListener('install', (e) => {
   // console.log('service worker is installed');
@@ -53,6 +64,7 @@ self.addEventListener('fetch', (e) => {
           fetch(e.request).then((fetchRes) => {
             return caches.open(dynamicCacheName).then((cache) => {
               cache.put(e.request.url, fetchRes.clone());
+              limitCacheSize(dynamicCacheName, 15);
               return fetchRes;
             });
           })
