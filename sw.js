@@ -9,6 +9,7 @@ const assets = [
   '/css/materialize.min.css',
   '/img/dish.png',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
+  'https://fonts.gstatic.com/s/materialicons/v67/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
 ];
 
 // install service worker
@@ -31,4 +32,9 @@ self.addEventListener('activate', (e) => {
 // fetch events
 self.addEventListener('fetch', (e) => {
   // console.log('fetch event', e);
+  e.respondWith(
+    caches.match(e.request).then((cacheRes) => {
+      return cacheRes || fetch(e.request);
+    })
+  );
 });
