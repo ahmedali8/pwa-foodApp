@@ -58,6 +58,10 @@ self.addEventListener('fetch', (e) => {
           })
         );
       })
-      .catch(() => caches.match('/pages/fallback.html'))
+      .catch(() => {
+        if (e.request.url.indexOf('.html') > -1) {
+          return caches.match('/pages/fallback.html');
+        }
+      })
   );
 });
