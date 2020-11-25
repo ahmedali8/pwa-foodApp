@@ -65,6 +65,7 @@ self.addEventListener('fetch', (e) => {
             fetch(e.request).then((fetchRes) => {
               return caches.open(dynamicCacheName).then((cache) => {
                 cache.put(e.request.url, fetchRes.clone());
+                // check cached items size
                 limitCacheSize(dynamicCacheName, 15);
                 return fetchRes;
               });
